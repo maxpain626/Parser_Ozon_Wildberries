@@ -11,4 +11,3 @@ content = urllib(req).read()
 
 print()
 
-#--header "Accept-Encoding: gzip, deflate, br" /
