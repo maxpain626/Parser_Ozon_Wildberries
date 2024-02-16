@@ -1,7 +1,7 @@
 #from urllib.request import Request, urlopen
 import urllib.request as urllib2
 import re
-import zipfile
+import zlib
 import hashlib
 import os.path
 #import requests
@@ -29,13 +29,10 @@ def cache(url):
         f = open(fname, "rb")
         content = f.read()
     return content
-    
 
-def unzip(data):
-    with zipfile._ZipStream(data) as zip_ref:
-        content = zip_ref.extract()
-
-    return ""
+def unzip(stream):
+    dec = zlib.decompressobj(32 + zlib.MAX_WBITS)  # offset 32 to skip the header
+    return dec.decompress(stream)
 
 def query(url):
     zip_data = query_http(url)
@@ -47,4 +44,8 @@ def test_ozon():
     content = query(url)
 
 #content = cache("https://www.ozon.ru/product/tecno-smartfon-pova-neo-3-8-128-gb-chernyy-1090852191/")
-content = cache("https://www.wildberries.ru/")
+zipped_content = cache("https://www.wildberries.ru/")
+content = unzip(zipped_content)
+print(len(zipped_content))
+print(len(content))
+print(content)
